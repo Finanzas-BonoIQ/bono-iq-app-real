@@ -77,7 +77,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Contraseña</Label>
-                    <Link href="/forgot-password" className="ml-auto inline-block text-sm underline">
+                    <Link href="/reset-password" className="ml-auto inline-block text-sm underline">
                       ¿Olvidaste tu contraseña?
                     </Link>
                   </div>
