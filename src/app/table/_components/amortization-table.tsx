@@ -1,32 +1,48 @@
-"use client"
+// app/amortization-table/_components/amortization-table.tsx
+"use client";
 
-import * as React from "react"
-import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import * as React from "react";
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from "@tanstack/react-table";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 
 interface AmortizationTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
 }
 
-export function AmortizationTable<TData, TValue>({ columns, data }: AmortizationTableProps<TData, TValue>) {
+export function AmortizationTable<TData, TValue>({
+                                                     columns,
+                                                     data,
+                                                 }: AmortizationTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-    })
+    });
 
-    const { rows } = table.getRowModel()
-    const parentRef = React.useRef<HTMLDivElement>(null)
+    const { rows } = table.getRowModel();
+    const parentRef = React.useRef<HTMLDivElement>(null);
 
     const rowVirtualizer = useVirtualizer({
         count: rows.length,
         getScrollElement: () => parentRef.current,
         estimateSize: () => 35, // estimate row height in px
         overscan: 10, // render 10 extra items on each side
-    })
+    });
 
     return (
         // This is the scrolling container
@@ -38,9 +54,14 @@ export function AmortizationTable<TData, TValue>({ columns, data }: Amortization
                             {headerGroup.headers.map((header) => {
                                 return (
                                     <TableHead key={header.id} className="text-center font-bold">
-                                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
                                     </TableHead>
-                                )
+                                );
                             })}
                         </TableRow>
                     ))}
@@ -50,17 +71,17 @@ export function AmortizationTable<TData, TValue>({ columns, data }: Amortization
                     style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
                 >
                     {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-                        const row = rows[virtualItem.index]
+                        const row = rows[virtualItem.index];
                         return (
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
                                 // Position each row absolutely
                                 style={{
-                                    position: "absolute",
+                                    position: 'absolute',
                                     top: 0,
                                     left: 0,
-                                    width: "100%",
+                                    width: '100%',
                                     height: `${virtualItem.size}px`,
                                     transform: `translateY(${virtualItem.start}px)`,
                                 }}
@@ -71,10 +92,10 @@ export function AmortizationTable<TData, TValue>({ columns, data }: Amortization
                                     </TableCell>
                                 ))}
                             </TableRow>
-                        )
+                        );
                     })}
                 </TableBody>
             </Table>
         </div>
-    )
+    );
 }

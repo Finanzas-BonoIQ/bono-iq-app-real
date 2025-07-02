@@ -44,38 +44,11 @@ const data = {
       url: "/bonos",
       icon: IconCoin,
     },
-<<<<<<< Updated upstream
-=======
-    ...(isInversor
-        ? [
-          {
-            title: "Mis Inversiones",
-            url: "/inversiones",
-            icon: IconTrendingUp,
-          },
-        ]
-        : []),
-    ...(isEmisor
-        ? [
-          {
-            title: "Mis Bonos",
-            url: "/mis-bonos",
-            icon: IconFileDescription,
-          },
-          {
-            title: "Crear Bono",
-            url: "/crear-bono",
-            icon: IconFileDescription,
-          },
-        ]
-        : []),
->>>>>>> Stashed changes
     {
-      title: "Tabla Amortización",
-      url: "/table",
+      title: "Analytics",
+      url: "/analytics",
       icon: IconChartBar,
     },
-<<<<<<< Updated upstream
     {
       title: "Reportes",
       url: "/reportes",
@@ -88,11 +61,6 @@ const data = {
     },
   ],
   navSecondary: [
-=======
-  ]
-
-  const navSecondaryItems = [
->>>>>>> Stashed changes
     {
       title: "Configuración",
       url: "/configuracion",

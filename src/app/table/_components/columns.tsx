@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import type { ColumnDef } from "@tanstack/react-table"
-import type { AmortizationRow } from "@/lib/types"
+import { ColumnDef } from "@tanstack/react-table";
+import { AmortizationRow } from "@/lib/types";
 
 // Helper function to format currency, using parentheses for negatives
 const formatCurrency = (value: number) => {
-    const options = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+    const options = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
     if (value < 0) {
-        return `(${Math.abs(value).toLocaleString("en-US", options)})`
+        return `(${Math.abs(value).toLocaleString("en-US", options)})`;
     }
-    return value.toLocaleString("en-US", options)
-}
+    return value.toLocaleString("en-US", options);
+};
 
 export const columns: ColumnDef<AmortizationRow>[] = [
     { accessorKey: "n", header: "Nº" },
@@ -79,4 +79,4 @@ export const columns: ColumnDef<AmortizationRow>[] = [
         header: "Valor Actual",
         cell: ({ row }) => <span className="text-red-600">{formatCurrency(row.getValue("valorActual"))}</span>,
     },
-]
+];

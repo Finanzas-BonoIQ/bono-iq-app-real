@@ -41,13 +41,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(session?.user ?? null)
             setLoading(false)
 
-            // Solo redirigir si estamos en la página raíz y no hay usuario
-            if (!session?.user && pathname === "/") {
+            // Si no hay usuario en rutas protegidas, redirigir a login
+            if (!session?.user) {
                 router.push("/login")
-            }
-            // Si hay usuario y está en páginas de auth, redirigir al dashboard
-            else if (session?.user && (pathname === "/login" || pathname === "/sign-up")) {
-                router.push("/dashboard")
             }
         }
 
@@ -58,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
             setUser(session?.user ?? null)
+            setLoading(false)
 
             if (event === "SIGNED_IN") {
                 router.push("/dashboard")
