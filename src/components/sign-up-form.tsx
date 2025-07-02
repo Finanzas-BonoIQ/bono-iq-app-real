@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -31,18 +31,18 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
   const router = useRouter()
   const supabase = createClient()
 
-  // Verificar si ya está autenticado al cargar la página
-  useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      if (session?.user) {
-        router.push("/dashboard")
-      }
-    }
-    checkAuth()
-  }, [router, supabase.auth])
+  // Comentar o eliminar este useEffect que está causando problemas
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const {
+  //       data: { session },
+  //     } = await supabase.auth.getSession()
+  //     if (session?.user) {
+  //       router.push("/dashboard")
+  //     }
+  //   }
+  //   checkAuth()
+  // }, [router, supabase.auth])
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))

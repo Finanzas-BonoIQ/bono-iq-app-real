@@ -3,7 +3,6 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import type { AmortizationRow } from "@/lib/types"
 
-// Helper function to format currency, using parentheses for negatives
 const formatCurrency = (value: number) => {
     const options = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
     if (value < 0) {

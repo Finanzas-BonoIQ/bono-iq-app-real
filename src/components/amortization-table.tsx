@@ -1,17 +1,89 @@
 "use client"
-
-import * as React from "react"
-import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { useReactTable, getCoreRowModel, flexRender, type ColumnDef } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
+import { useRef } from "react"
+import type { AmortizationRow } from "@/lib/types"
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+const columns: ColumnDef<AmortizationRow>[] = [
+    {
+        accessorKey: "periodo",
+        header: "Período",
+        cell: ({ row }) => <div className="text-center">{row.getValue("periodo")}</div>,
+    },
+    {
+        accessorKey: "fecha",
+        header: "Fecha",
+        cell: ({ row }) => <div className="text-center">{row.getValue("fecha")}</div>,
+    },
+    {
+        accessorKey: "saldo_inicial",
+        header: "Saldo Inicial",
+        cell: ({ row }) => {
+            const amount = Number.parseFloat(row.getValue("saldo_inicial"))
+            const formatted = new Intl.NumberFormat("es-PE", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+            return <div className="text-right font-medium">{formatted}</div>
+        },
+    },
+    {
+        accessorKey: "cupon",
+        header: "Cupón",
+        cell: ({ row }) => {
+            const amount = Number.parseFloat(row.getValue("cupon"))
+            const formatted = new Intl.NumberFormat("es-PE", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+            return <div className="text-right font-medium">{formatted}</div>
+        },
+    },
+    {
+        accessorKey: "amortizacion",
+        header: "Amortización",
+        cell: ({ row }) => {
+            const amount = Number.parseFloat(row.getValue("amortizacion"))
+            const formatted = new Intl.NumberFormat("es-PE", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+            return <div className="text-right font-medium">{formatted}</div>
+        },
+    },
+    {
+        accessorKey: "saldo_final",
+        header: "Saldo Final",
+        cell: ({ row }) => {
+            const amount = Number.parseFloat(row.getValue("saldo_final"))
+            const formatted = new Intl.NumberFormat("es-PE", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+            return <div className="text-right font-medium">{formatted}</div>
+        },
+    },
+    {
+        accessorKey: "flujo_total",
+        header: "Flujo Total",
+        cell: ({ row }) => {
+            const amount = Number.parseFloat(row.getValue("flujo_total"))
+            const formatted = new Intl.NumberFormat("es-PE", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+            return <div className="text-right font-medium text-green-600">{formatted}</div>
+        },
+    },
+]
 
-interface AmortizationTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+interface AmortizationTableProps {
+    data: AmortizationRow[]
 }
 
-export function AmortizationTable<TData, TValue>({ columns, data }: AmortizationTableProps<TData, TValue>) {
+export function AmortizationTable({ data }: AmortizationTableProps) {
+    const parentRef = useRef<HTMLDivElement>(null)
+
     const table = useReactTable({
         data,
         columns,
@@ -19,62 +91,72 @@ export function AmortizationTable<TData, TValue>({ columns, data }: Amortization
     })
 
     const { rows } = table.getRowModel()
-    const parentRef = React.useRef<HTMLDivElement>(null)
 
-    const rowVirtualizer = useVirtualizer({
+    const virtualizer = useVirtualizer({
         count: rows.length,
         getScrollElement: () => parentRef.current,
-        estimateSize: () => 35, // estimate row height in px
-        overscan: 10, // render 10 extra items on each side
+        estimateSize: () => 50,
+        overscan: 10,
     })
 
     return (
-        // This is the scrolling container
-        <div ref={parentRef} className="rounded-md border h-[600px] overflow-auto relative">
-            <Table>
-                <TableHeader className="sticky top-0 bg-secondary z-10">
+        <div className="rounded-md border">
+            <div className="relative">
+                <table className="w-full caption-bottom text-sm">
+                    <thead className="[&_tr]:border-b">
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
+                        <tr key={headerGroup.id} className="border-b transition-colors hover:bg-muted/50">
+                            {headerGroup.headers.map((header) => (
+                                <th
+                                    key={header.id}
+                                    className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                                >
+                                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                    </thead>
+                </table>
+                <div ref={parentRef} className="h-[400px] overflow-auto">
+                    <div
+                        style={{
+                            height: `${virtualizer.getTotalSize()}px`,
+                            width: "100%",
+                            position: "relative",
+                        }}
+                    >
+                        <table className="w-full caption-bottom text-sm">
+                            <tbody className="[&_tr:last-child]:border-0">
+                            {virtualizer.getVirtualItems().map((virtualRow) => {
+                                const row = rows[virtualRow.index]
                                 return (
-                                    <TableHead key={header.id} className="text-center font-bold">
-                                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                                    </TableHead>
+                                    <tr
+                                        key={row.id}
+                                        data-index={virtualRow.index}
+                                        style={{
+                                            position: "absolute",
+                                            top: 0,
+                                            left: 0,
+                                            width: "100%",
+                                            height: `${virtualRow.size}px`,
+                                            transform: `translateY(${virtualRow.start}px)`,
+                                        }}
+                                        className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <td key={cell.id} className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </td>
+                                        ))}
+                                    </tr>
                                 )
                             })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody
-                    // Add a container to set the total height of the scrollable area
-                    style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
-                >
-                    {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-                        const row = rows[virtualItem.index]
-                        return (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && "selected"}
-                                // Position each row absolutely
-                                style={{
-                                    position: "absolute",
-                                    top: 0,
-                                    left: 0,
-                                    width: "100%",
-                                    height: `${virtualItem.size}px`,
-                                    transform: `translateY(${virtualItem.start}px)`,
-                                }}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id} className="text-right font-mono text-xs p-2">
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        )
-                    })}
-                </TableBody>
-            </Table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

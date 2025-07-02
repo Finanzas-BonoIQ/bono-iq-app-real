@@ -7,7 +7,6 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 export const description = "Gráfico interactivo de rendimientos"
 
@@ -57,20 +56,8 @@ export function ChartAreaInteractive() {
             <CardDescription>Rendimiento acumulado de tu cartera de inversiones</CardDescription>
           </div>
           <div className="flex items-center space-x-2">
-            <ToggleGroup
-                type="single"
-                value={timeRange}
-                onValueChange={setTimeRange}
-                variant="outline"
-                size="sm"
-                className="hidden sm:flex"
-            >
-              <ToggleGroupItem value="7d">7d</ToggleGroupItem>
-              <ToggleGroupItem value="30d">30d</ToggleGroupItem>
-              <ToggleGroupItem value="90d">90d</ToggleGroupItem>
-            </ToggleGroup>
             <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className="w-32 sm:hidden" size="sm">
+              <SelectTrigger className="w-32">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
